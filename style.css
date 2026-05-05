@@ -301,7 +301,13 @@ body {
     filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
 }
 
-/* Responsive adjustments */
+#native-time-picker {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
 @media (max-width: 400px) {
     #timer-display { font-size: 4rem; }
     .progress-ring { width: 220px; height: 220px; }
