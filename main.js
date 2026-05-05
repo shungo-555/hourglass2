@@ -22,6 +22,7 @@ let particles = [];
 let animationId = null;
 let audioCtx = null;
 let isRunning = false;
+let finishSoundInterval = null; // ループ音用タイマー
 
 const ANIMALS = [
     { emoji: '🦒' }, { emoji: '🦁' }, { emoji: '🐘' }, { emoji: '🐰' }, 
@@ -158,7 +159,11 @@ function startTimer() {
     startStopBtn.textContent = 'ストップ';
     startStopBtn.classList.add('running');
     initAudio();
-    
+    // タイマー開始時に終了音ループが走っていたら止める
+    if (finishSoundInterval) {
+        clearInterval(finishSoundInterval);
+        finishSoundInterval = null;
+    }
     timerId = setInterval(() => {
         timeLeft--;
         updateDisplay();
@@ -174,6 +179,11 @@ function stopTimer() {
         clearInterval(timerId);
         timerId = null;
     }
+    // ユーザーが手動で止めたときは終了音ループを止める
+    if (finishSoundInterval) {
+        clearInterval(finishSoundInterval);
+        finishSoundInterval = null;
+    }
 }
 
 function resetTimer() {
@@ -182,6 +192,11 @@ function resetTimer() {
     timeLeft = 0;
     totalTime = 0;
     updateDisplay();
+    // リセット時にも終了音ループが走っていたら止める
+    if (finishSoundInterval) {
+        clearInterval(finishSoundInterval);
+        finishSoundInterval = null;
+    }
 }
 
 function updateDisplay() {
@@ -199,8 +214,19 @@ function updateDisplay() {
 }
 
 function finishTimer() {
-    stopTimer();
+    // タイマー停止（finishTimer 内で stopTimer が呼ばれるのを防ぐ）
+    isRunning = false;
+    startStopBtn.textContent = 'スタート';
+    startStopBtn.classList.remove('running');
+    if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+    }
+    // 終了音をループ再生開始
     playFinishSound();
+    finishSoundInterval = setInterval(() => {
+        playFinishSound();
+    }, 2000); // 2秒ごとにビープ
     startRandomAnimation();
 }
 
