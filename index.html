@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>わくわくタイマー</title>
+    <meta name="description" content="子供が楽しく使える、アニメーションいっぱいのタイマーアプリです。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1 id="timer-display">00:00</h1>
+        </header>
+
+        <main>
+            <div class="circle-container">
+                <div class="pie-chart-bg"></div>
+                <div id="pie-chart" class="pie-chart"></div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="preset-buttons">
+                <button class="preset-btn" data-time="1">01:00</button>
+                <button class="preset-btn" data-time="2">02:00</button>
+                <button class="preset-btn" data-time="3">03:00</button>
+                <button class="preset-btn" data-time="5">05:00</button>
+                <button class="preset-btn" data-time="10">10:00</button>
+                <button id="custom-btn" class="preset-btn custom">00:00</button>
+            </div>
+
+            <div class="control-buttons">
+                <button id="start-stop-btn" class="control-btn primary">スタート</button>
+                <button id="reset-btn" class="control-btn">リセット</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- タイムピッカーモーダル -->
+    <div id="picker-modal" class="modal">
+        <div class="modal-content">
+            <div class="picker-container">
+                <div class="picker-column" id="picker-mins">
+                    <div class="picker-label">分</div>
+                    <div class="picker-scroll" id="scroll-mins">
+                        <!-- JSで数字を生成 -->
+                    </div>
+                </div>
+                <div class="picker-column" id="picker-secs">
+                    <div class="picker-label">秒</div>
+                    <div class="picker-scroll" id="scroll-secs">
+                        <!-- JSで数字を生成 -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button id="picker-cancel" class="modal-btn cancel">やめる</button>
+                <button id="picker-ok" class="modal-btn ok">OK!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- アニメーション用のレイヤー -->
+    <canvas id="animation-canvas"></canvas>
+    <div id="animal-container"></div>
+
+    <script src="main.js"></script>
+</body>
+</html>

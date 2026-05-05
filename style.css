@@ -1,0 +1,310 @@
+:root {
+    --bg-gradient: linear-gradient(135deg, #FF9A9E 0%, #FAD0C4 99%, #FAD0C4 100%);
+    --primary-color: #FF6B6B;
+    --accent-color: #4ECDC4;
+    --text-color: #2D3436;
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.4);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    background: var(--bg-gradient);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+#app {
+    position: relative;
+    z-index: 10;
+    width: 90%;
+    max-width: 500px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--glass-border);
+    border-radius: 40px;
+    padding: 40px 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* Header / Timer Display */
+#timer-display {
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.8);
+    margin-bottom: 10px;
+}
+
+.circle-container {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie-chart-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
+}
+
+.pie-chart {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary-color) 0deg, transparent 0deg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: background 0.1s linear;
+    /* transform: rotate(-90deg) は不要。conic-gradientの0degはデフォルトで12時 */
+}
+
+/* Footer / Preset Buttons */
+.preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.preset-btn {
+    background: white;
+    border: none;
+    padding: 12px 5px;
+    border-radius: 15px;
+    font-family: inherit;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.preset-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    background: var(--primary-color);
+    color: white;
+}
+
+.preset-btn.custom {
+    background: #FF7675; /* Coral Pink */
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.preset-btn.custom:hover {
+    background: #FF5252;
+    color: white;
+}
+
+.control-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.control-btn {
+    background: #636E72;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    width: 120px; /* サイズを固定して統一 */
+    border-radius: 50px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.control-btn.primary {
+    background: var(--accent-color);
+}
+
+.control-btn.primary.running {
+    background: #fab1a0;
+}
+
+/* Modal & Picker Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 30px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.modal-content h3 {
+    margin-bottom: 20px;
+    color: var(--primary-color);
+}
+
+.picker-container {
+    display: flex;
+    justify-content: space-around;
+    height: 150px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.picker-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.picker-label {
+    font-size: 0.8rem;
+    color: #999;
+    margin-bottom: 5px;
+}
+
+.picker-scroll {
+    height: 120px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: y mandatory;
+}
+
+.picker-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.picker-item {
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    scroll-snap-align: center;
+    color: #ccc;
+    transition: color 0.2s;
+}
+
+.picker-item.active {
+    color: var(--text-color);
+    transform: scale(1.2);
+}
+
+/* Selection Highlight */
+.picker-container::after {
+    content: '';
+    position: absolute;
+    top: 75px; /* (150 - 40) / 2 + 15? No, label is there. */
+    left: 10%;
+    right: 10%;
+    height: 40px;
+    border-top: 2px solid #eee;
+    border-bottom: 2px solid #eee;
+    pointer-events: none;
+    z-index: -1;
+}
+/* Re-adjusting center line */
+.picker-container::after {
+    top: 60px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: none;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.modal-btn.ok {
+    background: var(--accent-color);
+    color: white;
+}
+
+.modal-btn.cancel {
+    background: #eee;
+    color: #666;
+}
+
+.control-btn:hover {
+    opacity: 0.8;
+    transform: scale(1.05);
+}
+
+/* Animation Canvas & Animal Layer */
+#animation-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+#animal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 110; /* Front of everything */
+}
+
+.animal {
+    position: absolute;
+    font-size: 6rem; /* Bigger */
+    user-select: none;
+    will-change: transform;
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+}
+
+/* Responsive adjustments */
+@media (max-width: 400px) {
+    #timer-display { font-size: 4rem; }
+    .progress-ring { width: 220px; height: 220px; }
+    .progress-ring__circle, .progress-ring__background { r: 90; cx: 110; cy: 110; }
+    .progress-ring__circle { stroke-dasharray: 565.48; } /* 2 * PI * 90 */
+}
