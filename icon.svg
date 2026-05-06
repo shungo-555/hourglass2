@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="120" fill="#FF7675" />
+  <!-- 砂時計の輪郭 -->
+  <path d="M160 120h192M160 392h192" stroke="white" stroke-width="30" stroke-linecap="round" />
+  <path d="M175 135c0 90 162 90 162 242H175c0-152 162-152 162-242z" fill="rgba(255,255,255,0.2)" stroke="white" stroke-width="15" stroke-linejoin="round" />
+  <!-- 落ちている砂 -->
+  <path d="M256 250 L195 365 L317 365 Z" fill="white" />
+  <!-- 上にたまっている砂 -->
+  <path d="M195 145 L317 145 L256 230 Z" fill="white" opacity="0.7" />
+</svg>

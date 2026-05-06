@@ -10,8 +10,15 @@ const animalContainer = document.getElementById('animal-container');
 
 // Modal Elements
 const pickerModal = document.getElementById('picker-modal');
-const scrollMins = document.getElementById('scroll-mins');
-const scrollSecs = document.getElementById('scroll-secs');
+// Unused scroll element references removed
+
+// const scrollMins = document.getElementById('scroll-mins');
+// const scrollSecs = document.getElementById('scroll-secs');
+// Digit Picker State
+let inputIndex = 0;
+let currentDigits = [0, 0, 0, 0];
+let digitBoxes = [];
+
 const pickerOk = document.getElementById('picker-ok');
 const pickerCancel = document.getElementById('picker-cancel');
 
@@ -45,21 +52,89 @@ function init() {
     });
 
     customBtn.addEventListener('click', () => {
-        showPicker();
+        console.log('Custom button clicked');
+        // ピッカーを開く際に入力状態をリセット
+        inputIndex = 0;
+        currentDigits = [0, 0, 0, 0];
+        updatePickerUI();
+        pickerModal.style.display = 'flex';
     });
 
     startStopBtn.addEventListener('click', () => {
+        console.log('Start/Stop button clicked');
         if (isRunning) stopTimer();
         else startTimer();
     });
 
-    resetBtn.addEventListener('click', resetTimer);
+    resetBtn.addEventListener('click', () => {
+        console.log('Reset button clicked');
+        resetTimer();
+    });
+
+    // テンキーの初期化
+    digitBoxes = [
+        document.getElementById('db-0'),
+        document.getElementById('db-1'),
+        document.getElementById('db-2'),
+        document.getElementById('db-3')
+    ];
     
-    // Picker Initialization
-    initPicker();
+    const keyBtns = document.querySelectorAll('.key-btn[data-val]');
+    const keyClear = document.getElementById('key-clear');
+    const keyBack = document.getElementById('key-back');
+
+    function updateKeypadStatus() {
+        keyBtns.forEach(btn => {
+            const val = parseInt(btn.dataset.val);
+            // 秒10位（インデックス2）のときは6以上を無効化
+            if (inputIndex === 2 && val >= 6) {
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            }
+        });
+    }
+
+    function updatePickerUI() {
+        digitBoxes.forEach((box, i) => {
+            box.textContent = currentDigits[i];
+            box.classList.toggle('active', i === inputIndex);
+        });
+        updateKeypadStatus();
+    }
+
+    keyBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const val = parseInt(btn.dataset.val);
+            if (inputIndex < 4) {
+                currentDigits[inputIndex] = val;
+                inputIndex = Math.min(inputIndex + 1, 4);
+                updatePickerUI();
+            }
+        });
+    });
+
+    keyClear.addEventListener('click', () => {
+        inputIndex = 0;
+        currentDigits = [0, 0, 0, 0];
+        updatePickerUI();
+    });
+
+    keyBack.addEventListener('click', () => {
+        if (inputIndex > 0) {
+            // 現在のフォーカスが4（全入力済み）なら、3に戻して消す
+            // それ以外なら一つ戻って消す
+            inputIndex--;
+            currentDigits[inputIndex] = 0;
+            updatePickerUI();
+        }
+    });
+
+    // ピッカー OK / Cancel
     pickerOk.addEventListener('click', () => {
-        const mins = getPickerValue(scrollMins);
-        const secs = getPickerValue(scrollSecs);
+        console.log('Picker OK clicked');
+        const mins = currentDigits[0] * 10 + currentDigits[1];
+        const secs = currentDigits[2] * 10 + currentDigits[3];
         const totalSecs = mins * 60 + secs;
         if (totalSecs > 0) {
             setTimer(totalSecs);
@@ -81,63 +156,17 @@ function resizeCanvas() {
 // --- タイムピッカー (ドラムロール風) ---
 
 function initPicker() {
-    // 分: 0-99, 秒: 0-59
-    generatePickerItems(scrollMins, 100);
-    generatePickerItems(scrollSecs, 60);
-    
-    [scrollMins, scrollSecs].forEach(scroll => {
-        scroll.addEventListener('scroll', () => updateActiveItem(scroll));
-    });
+    // もはや使用しないので空関数
 }
 
-function generatePickerItems(container, count) {
-    // スナップ用の余白 (上下にアイテム2個分)
-    container.innerHTML = '<div class="picker-item spacer"></div>';
-    for (let i = 0; i < count; i++) {
-        const item = document.createElement('div');
-        item.className = 'picker-item';
-        item.textContent = String(i).padStart(2, '0');
-        item.dataset.value = i;
-        container.appendChild(item);
-    }
-    container.innerHTML += '<div class="picker-item spacer"></div>';
-}
+// generatePickerItems 削除（使用しない）
 
-function updateActiveItem(container) {
-    const items = container.querySelectorAll('.picker-item:not(.spacer)');
-    const containerRect = container.getBoundingClientRect();
-    const centerY = containerRect.top + containerRect.height / 2;
-    
-    let closest = null;
-    let minDiff = Infinity;
-    
-    items.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const itemCenterY = rect.top + rect.height / 2;
-        const diff = Math.abs(centerY - itemCenterY);
-        
-        item.classList.remove('active');
-        if (diff < minDiff) {
-            minDiff = diff;
-            closest = item;
-        }
-    });
-    
-    if (closest) closest.classList.add('active');
-}
+// updateActiveItem 削除（使用しない）
 
-function getPickerValue(container) {
-    const active = container.querySelector('.picker-item.active');
-    return active ? parseInt(active.dataset.value) : 0;
-}
+// getPickerValue 削除（使用しない）
 
 function showPicker() {
     pickerModal.style.display = 'flex';
-    // 初期位置を中央に
-    setTimeout(() => {
-        updateActiveItem(scrollMins);
-        updateActiveItem(scrollSecs);
-    }, 100);
 }
 
 function hidePicker() {
@@ -284,6 +313,10 @@ function createAnimal() {
     const side = Math.random() > 0.5 ? 'left' : 'right';
     const top = 10 + Math.random() * 70;
     animalEl.style.top = `${top}%`;
+    
+    // ランダムなサイズ（6rem〜12rem）を設定
+    const size = 6 + Math.random() * 6;
+    animalEl.style.fontSize = `${size}rem`;
     
     if (side === 'left') {
         animalEl.style.left = '-200px';
@@ -433,4 +466,4 @@ function stopAnimation() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-init();
+window.addEventListener('DOMContentLoaded', init);

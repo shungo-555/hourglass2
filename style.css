@@ -176,70 +176,90 @@ body {
     color: var(--primary-color);
 }
 
-.picker-container {
-    display: flex;
-    justify-content: space-around;
-    height: 150px;
+/* Digit Display area */
+.digit-picker {
     margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
 }
 
-.picker-column {
-    flex: 1;
+#digit-display {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 18px;
 }
 
-.picker-label {
-    font-size: 0.8rem;
-    color: #999;
-    margin-bottom: 5px;
-}
-
-.picker-scroll {
-    height: 120px;
-    overflow-y: scroll;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-snap-type: y mandatory;
-}
-
-.picker-scroll::-webkit-scrollbar {
-    display: none;
-}
-
-.picker-item {
-    height: 40px;
-    line-height: 40px;
-    font-size: 1.5rem;
+.digit-box {
+    width: 40px;
+    height: 55px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.2rem;
     font-weight: 700;
-    scroll-snap-align: center;
-    color: #ccc;
-    transition: color 0.2s;
-}
-
-.picker-item.active {
     color: var(--text-color);
-    transform: scale(1.2);
+    transition: all 0.2s;
 }
 
-/* Selection Highlight */
-.picker-container::after {
-    content: '';
-    position: absolute;
-    top: 75px; /* (150 - 40) / 2 + 15? No, label is there. */
-    left: 10%;
-    right: 10%;
-    height: 40px;
-    border-top: 2px solid #eee;
-    border-bottom: 2px solid #eee;
-    pointer-events: none;
-    z-index: -1;
+.digit-box.active {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(255, 107, 107, 0.3);
+    transform: scale(1.05);
+    background: #fffafa;
 }
-/* Re-adjusting center line */
-.picker-container::after {
-    top: 60px;
+
+.separator {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Keypad */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.key-btn {
+    background: white;
+    border: 2px solid #eee;
+    padding: 12px 0;
+    border-radius: 15px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.1s;
+    user-select: none;
+    font-family: inherit;
+}
+
+.key-btn:active {
+    transform: scale(0.92);
+    background: #f8f8f8;
+}
+
+.key-btn:disabled {
+    background: #f0f0f0;
+    color: #bbb;
+    cursor: not-allowed;
+    border-color: #eee;
+    opacity: 0.6;
+}
+
+.key-btn.clear {
+    color: #FF7675;
+}
+
+.key-btn.backspace {
+    color: #636E72;
 }
 
 .modal-buttons {
@@ -295,7 +315,6 @@ body {
 
 .animal {
     position: absolute;
-    font-size: 6rem; /* Bigger */
     user-select: none;
     will-change: transform;
     filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1));

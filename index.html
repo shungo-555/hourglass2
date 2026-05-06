@@ -12,9 +12,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="わくわくタイマー">
     
-    <!-- Apple Touch Icon (Emoji as Icon) -->
-    <link rel="apple-touch-icon" href="https://fav.farm/⏰">
-    <link rel="icon" href="https://fav.farm/⏰">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,28 +53,38 @@
     </div>
 
     <!-- タイムピッカーモーダル -->
-    <div id="picker-modal" class="modal">
-        <div class="modal-content">
-            <div class="picker-container">
-                <div class="picker-column" id="picker-mins">
-                    <div class="picker-label">分</div>
-                    <div class="picker-scroll" id="scroll-mins">
-                        <!-- JSで数字を生成 -->
-                    </div>
-                </div>
-                <div class="picker-column" id="picker-secs">
-                    <div class="picker-label">秒</div>
-                    <div class="picker-scroll" id="scroll-secs">
-                        <!-- JSで数字を生成 -->
-                    </div>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button id="picker-cancel" class="modal-btn cancel">やめる</button>
-                <button id="picker-ok" class="modal-btn ok">OK!</button>
+<div id="picker-modal" class="modal">
+    <div class="modal-content">
+        <h3>カスタム</h3>
+        <div class="digit-picker">
+            <div id="digit-display">
+                <div class="digit-box active" id="db-0">0</div>
+                <div class="digit-box" id="db-1">0</div>
+                <span class="separator">:</span>
+                <div class="digit-box" id="db-2">0</div>
+                <div class="digit-box" id="db-3">0</div>
             </div>
         </div>
+        <div class="keypad">
+            <button class="key-btn" data-val="1">1</button>
+            <button class="key-btn" data-val="2">2</button>
+            <button class="key-btn" data-val="3">3</button>
+            <button class="key-btn" data-val="4">4</button>
+            <button class="key-btn" data-val="5">5</button>
+            <button class="key-btn" data-val="6">6</button>
+            <button class="key-btn" data-val="7">7</button>
+            <button class="key-btn" data-val="8">8</button>
+            <button class="key-btn" data-val="9">9</button>
+            <button class="key-btn clear" id="key-clear">C</button>
+            <button class="key-btn" data-val="0">0</button>
+            <button class="key-btn backspace" id="key-back">⌫</button>
+        </div>
+        <div class="modal-buttons">
+            <button id="picker-cancel" class="modal-btn cancel">やめる</button>
+            <button id="picker-ok" class="modal-btn ok">OK!</button>
+        </div>
     </div>
+</div>
 
     <!-- アニメーション用のレイヤー -->
     <canvas id="animation-canvas"></canvas>
